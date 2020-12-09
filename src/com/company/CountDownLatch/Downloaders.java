@@ -1,30 +1,32 @@
-package com.company;
+package com.company.CountDownLatch;
 
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Semaphore;
 
-public class Downloaders extends Thread {
-    private Semaphore semaphore;
+public class Downloaders extends Thread{
+
+
+
     private CountDownLatch cdl;
-    private int volume = 500;
     private int speed = 100;
+    private int volume = 500;
 
-
-
-    public Downloaders(String name, CountDownLatch cdl) {
+    public Downloaders(String name,  CountDownLatch cdl) {
         super(name);
         this.cdl=cdl;
 
+
+
     }
-    public  void run() {
+
+    public synchronized void run() {
+
 
 
         try {
-
-            cdl.countDown();
-            cdl.await();
             System.out.println( this.getName() + "  зарегистрировался " +
                     " и встал в очередь на загрузку ");
+            cdl.countDown();
+            cdl.await();
 
 
             System.out.println( this.getName() +
