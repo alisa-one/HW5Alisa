@@ -7,26 +7,23 @@ public class Main {
 
     public static synchronized void main(String[] args) {
 
-        Semaphore semaphore = new Semaphore(1);
 
-        new Uploader("Загрузчик", semaphore).start();
-
+        Semaphore semaphore = new Semaphore(5);
         CountDownLatch cdl = new CountDownLatch(3);
-        cdl.countDown();
 
+        new Uploader("Загрузчик", cdl).start();
+
+        cdl.countDown();
 
         for (int i = 1; i < 11; i++) {
 
-
             new Downloaders("Скачиватель" + i, cdl).start();
-
-
         }
 
+
     }
-
-
 }
+
 
 
 

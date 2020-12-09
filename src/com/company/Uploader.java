@@ -5,42 +5,40 @@ import java.util.concurrent.Semaphore;
 
 public class Uploader extends Thread {
 
-    private Semaphore semaphore;
 
-    private final int volume = 500;
-    private final int speed = 100;
+    private CountDownLatch cdl;
+
+    private int speed = 100;
+    private int volume = 500;
 
 
-
-    public Uploader(String name, Semaphore semaphore) {
+    public Uploader(String name, CountDownLatch cdl) {
         super(name);
-        this.semaphore=semaphore;
+
+        this.cdl = cdl;
 
     }
+
+
     public synchronized void run() {
         try {
 
+            System.out.println(this.getName() + "  загружает файл на сервер " + volume + "  Мб "
+                    + " со скоростью "
+                    + speed + " Мб/сек");
 
-            System.out.println(this.getName() + "  готов к работе");
+            sleep(volume / speed);
 
-            semaphore.acquire();
-            System.out.println("-----------------------------------------");
-            for (int p = 1; p < 6; p++) {
+            System.out.println("Загрузилось на сервер:   " + volume + " Мб ");
 
-                System.out.println(this.getName() + "  загружает часть файла: " + volume/5 + "  Мб "
-                        + " со скоростью "
-                        + volume / speed + " Мб/сек");
 
-                sleep(volume / speed);}
-
-            System.out.println("  \uD83D\uDFE6 "+"  \uD83D\uDFE6 "+"  \uD83D\uDFE6 "+"  \uD83D\uDFE6 "+"  \uD83D\uDFE6 ");
+            System.out.println("  \uD83D\uDFE6 " + "  \uD83D\uDFE6 " + "  \uD83D\uDFE6 " + "  \uD83D\uDFE6 " + "  \uD83D\uDFE6 ");
             System.out.println(this.getName() + " закончил загрузку");
-
-            semaphore.release();
-
+            cdl.countDown();
 
         } catch (InterruptedException e) {
 
         }
+
     }
 }
