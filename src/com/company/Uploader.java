@@ -6,16 +6,16 @@ import java.util.concurrent.Semaphore;
 public class Uploader extends Thread {
 
     private Semaphore semaphore;
-    private CountDownLatch cdl;
+
     private final int volume = 500;
     private final int speed = 100;
 
 
 
-    public Uploader(String name, Semaphore semaphore,CountDownLatch cdl) {
+    public Uploader(String name, Semaphore semaphore) {
         super(name);
         this.semaphore=semaphore;
-        this.cdl=cdl;
+
     }
     public synchronized void run() {
         try {

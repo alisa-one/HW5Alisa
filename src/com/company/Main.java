@@ -8,11 +8,10 @@ public class Main {
     public static synchronized void main(String[] args) {
 
         Semaphore semaphore = new Semaphore(1);
+
+        new Uploader("Загрузчик", semaphore).start();
+
         CountDownLatch cdl = new CountDownLatch(3);
-
-
-        new Uploader("Загрузчик", semaphore, cdl).start();
-
         cdl.countDown();
 
 
