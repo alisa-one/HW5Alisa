@@ -4,35 +4,36 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Semaphore;
 
 public class Downloaders extends Thread {
-
+    private Semaphore semaphore;
     private CountDownLatch cdl;
+    private CountDownLatch cdl2;
+
     private int volume = 500;
     private int speed = 100;
 
 
-    public Downloaders(String name, CountDownLatch cdl) {
+    public Downloaders(String name, Semaphore semaphore,CountDownLatch cdl, CountDownLatch cdl2) {
         super(name);
-
+        this.semaphore=semaphore;
         this.cdl = cdl;
-
+        this.cdl2=cdl2;
     }
-
-    public void run() {
-
+    public synchronized void run() {
         try {
+            cdl2.countDown();
+            cdl2.await();
 
-            cdl.countDown();
-            cdl.await();
-            sleep(volume*3 / speed);
-            System.out.println(this.getName() + "  встал в очередь на скачивание файла");
-
+            semaphore.acquire(3);
             System.out.println(this.getName() +
                     "  скачивает файл со скоростью  " + speed + " Мб/сек");
+            sleep(volume/ speed);
 
             System.out.println(this.getName()
                     + "  скачал файл");
+            semaphore.release(3);
+            cdl.countDown();
 
-        } catch (InterruptedException e) {
+        } catch (InterruptedException  IllegalThreadStateException ) {
 
         }
 
