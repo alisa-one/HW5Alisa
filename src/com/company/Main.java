@@ -9,17 +9,21 @@ public class Main {
 
     public static synchronized void main(String[] args) {
 
-        Semaphore semaphore = new Semaphore(3);
+        Semaphore semaphore2 = new Semaphore(3, true);
 
-        CountDownLatch cdl= new CountDownLatch(3);
-        CountDownLatch cdl2 = new CountDownLatch(10);
+        CountDownLatch cdl = new CountDownLatch(10);
+        CountDownLatch cdl2 = new CountDownLatch(1);
 
-        new Uploader("Загрузчик", semaphore, cdl2).start();
+        new Uploader("Загрузчик", cdl2).start();
 
         for (int i = 1; i < 11; i++) {
+            new Downloaders("Скачиватель " + i, semaphore2, cdl, cdl2).start();
+        }
 
-            new Downloaders("Скачиватель " + i,semaphore, cdl, cdl2).start();
-
+        try {
+            cdl.await();
+            System.out.println("Файл удален из сервера!");
+        } catch (InterruptedException e) {
 
         }
 
