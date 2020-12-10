@@ -11,13 +11,16 @@ public class Main {
         Semaphore semaphore = new Semaphore(5);
         CountDownLatch cdl = new CountDownLatch(3);
 
-        new Uploader("Загрузчик", cdl).start();
+
+        new Uploader("Загрузчик", semaphore, cdl).start();
 
         cdl.countDown();
 
         for (int i = 1; i < 11; i++) {
 
-            new Downloaders("Скачиватель" + i, cdl).start();
+            new Downloaders("Скачиватель " + i, cdl).start();
+
+
         }
 
 
